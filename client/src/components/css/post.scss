@@ -1,0 +1,10 @@
+.card{
+    z-index: 1;
+
+    .CardActionArea{
+        .CardMedia{
+            z-index: -5;
+            position:relative;
+        }
+    }
+}
