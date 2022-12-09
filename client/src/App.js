@@ -30,7 +30,7 @@ import Post from './components/Post'
 import Chat from './components/Chat'
 import './App.css';
 import { Logout } from '@mui/icons-material';
-import { Popup } from './components/popup';
+import FormDialog from './components/popup';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -141,17 +141,6 @@ function App() {
     }
   }
 
-  async function uploadImage() {
-    const deso = new Deso();
-    const jwt = await deso.identity.getJwt();
-    console.log(jwt);
-    const request = {
-      "UserPublicKeyBase58Check": publicKey,
-      "JWT": jwt,
-    }
-    const response = await deso.media.uploadImage(request);
-  };
-
   const search = () => {
     //take input from searchterm
     // put list of posts with setposts
@@ -237,8 +226,8 @@ function App() {
       </AppBar>
       {renderMenu}
     </Box>
-    <Button className="create-btn" variant="contained" onClick={() => setPopupTrigger(true)}>Create Post</Button>
-    <Popup trigger={popupTrigger} setTrigger={setPopupTrigger}></Popup>
+    
+    <FormDialog publicKey={publicKey}></FormDialog>
     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="flex-start"
     style = {{paddingLeft:"12em", paddingRight:'12em'}}>
       {posts.map( ()=> { return(
