@@ -86,10 +86,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function App() {
   const [publicKey, setPublicKey] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [posts, setposts] = useState(new Array(50).fill('e'))
   const [isChatOpen, setisChatOpen] = useState(false)
   const [searchterm, setsearchterm] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+  const [posts, setPosts] = useState([]);
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -100,6 +100,11 @@ function App() {
     setAnchorEl(null);
   };
 
+  useEffect(()=>{
+    fetch('/api')
+    .then(response => response.json())
+    .then(data => setPosts(data))
+  });
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -229,9 +234,9 @@ function App() {
     
     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="flex-start"
     style = {{paddingLeft:"12em", paddingRight:'12em'}}>
-      {posts.map( ()=> { return(
+      {posts.map( (hashhex) => { return(
       <Grid item xs={2} sm={3} md={4} >
-        <Post>e</Post>
+        <Post body={hashhex['PostFound']['Body']} image={hashhex['PostFound']['ImageURLs'][0]}/>
       </Grid> )} ) }
     </Grid>
     </div>

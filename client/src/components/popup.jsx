@@ -8,23 +8,24 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import Deso from 'deso-protocol';
+import axios from 'axios';
+
 
 export default function FormDialog(props) {
   const [open, setOpen] = useState(false);
   const [imageURL, setImageURL] = useState();
+  const [hashhex, setHashhex] = useState('');
   const [body, setBody] = useState('');
   const publicKey = props.publicKey;
 
   async function uploadImage() {
     const deso = new Deso();
     const jwt = await deso.identity.getJwt();
-    console.log(jwt);
     const request = {
       "UserPublicKeyBase58Check": publicKey,
       "JWT": jwt,
     }
     const response = await deso.media.uploadImage(request);
-    console.log(response["ImageURL"])
     setImageURL(response["ImageURL"])
   };
 
@@ -38,8 +39,19 @@ export default function FormDialog(props) {
         "ImageURLs": [imageURL]
     }};
     const response = await deso.posts.submitPost(request);
-    console.log(response);
+    const data = JSON.stringify(response["constructedTransactionResponse"]["PostHashHex"]);
+    setHashhex(data)
 };
+
+async function getPost () {
+    const deso = new Deso();
+    const request = {
+    "PostHashHex": {hashhex}
+    };
+    const response = await deso.posts.getSinglePost(request);
+    console.log(JSON.stringify(response));
+    return response
+}
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -50,7 +62,13 @@ export default function FormDialog(props) {
   };
 
   const handleSubmit = () => {
-    createPost()
+    const hashhex = createPost()
+    const data = getPost();
+    console.log(JSON.stringify(data))
+    axios
+        .post('/input', data)
+        .then(() => console.log('Post Created'))
+        .catch(err => err.response())
     handleClose()
   }
 
