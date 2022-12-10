@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -10,10 +10,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Deso from 'deso-protocol';
 
 export default function FormDialog(props) {
-  const [open, setOpen] = React.useState(false);
-  const publicKey = props.publicKey
+  const [open, setOpen] = useState(false);
+  const [imageURL, setImageURL] = useState();
+  const [body, setBody] = useState('');
+  const publicKey = props.publicKey;
 
-  async function uploadImage(publicKey) {
+  async function uploadImage() {
     const deso = new Deso();
     const jwt = await deso.identity.getJwt();
     console.log(jwt);
@@ -22,7 +24,22 @@ export default function FormDialog(props) {
       "JWT": jwt,
     }
     const response = await deso.media.uploadImage(request);
+    console.log(response["ImageURL"])
+    setImageURL(response["ImageURL"])
   };
+
+  async function createPost() {
+    const deso = new Deso();
+    const request = {
+    "UpdaterPublicKeyBase58Check": publicKey,
+    "BodyObj": {
+        "Body": body,
+        "VideoURLs": [],
+        "ImageURLs": [imageURL]
+    }};
+    const response = await deso.posts.submitPost(request);
+    console.log(response);
+};
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,12 +49,17 @@ export default function FormDialog(props) {
     setOpen(false);
   };
 
+  const handleSubmit = () => {
+    createPost()
+    handleClose()
+  }
+
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
         Create Post
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} fullWidth={true}>
         <DialogTitle>Create Post</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -51,14 +73,19 @@ export default function FormDialog(props) {
             multiline
             fullWidth
             variant="filled"
+            value={body}
+            onChange={(e) => {setBody(e.target.value)}}
           />
         </DialogContent>
+        {imageURL ? 
+        imageURL : 
         <DialogActions>
-            <Button onClick={uploadImage}>UploadImage</Button> 
+        <Button onClick={uploadImage}>UploadImage</Button> 
         </DialogActions>
+        }     
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button onClick={handleSubmit}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>

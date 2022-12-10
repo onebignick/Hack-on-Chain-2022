@@ -1,3 +1,5 @@
+import Deso from 'deso-protocol';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -6,10 +8,18 @@ import Typography from '@mui/material/Typography';
 
 import './css/post.scss'
 
-export default function Post({image, title, id}) {
-        
-    return (
+export default function Post(props) {
+    /*async function getPost () {
+        const deso = new Deso();
+        const request = {
+        "PostHashHex": props.hashHex
+        };
+        const response = await deso.posts.getSinglePost(request);
+        return response
+    }
 
+    const data = getPost()*/
+    return (
         <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
                 <CardMedia
@@ -25,7 +35,6 @@ export default function Post({image, title, id}) {
                 </CardContent>
             </CardActionArea>
             </Card>
-
     )
 
 }

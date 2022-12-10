@@ -90,7 +90,6 @@ function App() {
   const [isChatOpen, setisChatOpen] = useState(false)
   const [searchterm, setsearchterm] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-  const [popupTrigger, setPopupTrigger] = useState(false);
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -226,8 +225,8 @@ function App() {
       </AppBar>
       {renderMenu}
     </Box>
+    {isLoggedIn ? <FormDialog publicKey={publicKey}></FormDialog>:""}
     
-    <FormDialog publicKey={publicKey}></FormDialog>
     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="flex-start"
     style = {{paddingLeft:"12em", paddingRight:'12em'}}>
       {posts.map( ()=> { return(
