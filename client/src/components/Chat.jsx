@@ -20,7 +20,21 @@ function intersperse(arr, sep) {
 		return xs.concat([separator, x]);
 	}, [arr[0]]);
 }
+const Messages = ({textfieldtext, settextfieldtext})=> {
+    const handleChange = (e) => {settextfieldtext(e.target.value)}
+    return (
+    <Box sx={{ width: "70%", height:"60%"}}>
 
+        <Typography>Current item name </Typography>
+        <Box>
+        {messages.map(({owner, text}) =>
+          <Message owner={owner} text={text} />
+        )}
+        </Box>
+        <TextField key="fwfefew" value = {textfieldtext} id="standard-basic" label="Chat!" variant="standard" onChange={handleChange}/>
+    </Box>
+    )
+};
 export default function Chat () {
     //login check
     const [halfscreen, sethalfscreen] = useState(true)
@@ -40,21 +54,7 @@ export default function Chat () {
         )
     }
     // <Message owner={owner} text={text}/>
-    const Messages = ()=> {
-        const handleChange = (e) => {settextfieldtext(e.target.value)}
-        return (
-        <Box sx={{ width: "70%", height:"60%"}}>
-
-            <Typography>Current item name </Typography>
-            <Box>
-            {messages.map(({owner, text}) =>
-              <Message owner={owner} text={text} />
-            )}
-            </Box>
-            <TextField value = {textfieldtext}id="standard-basic" label="Chat!" variant="standard" onChange={handleChange}/>
-        </Box>
-        )
-    };
+   
     const openChat = (id) =>  {
         // add a new chat and open the full display
         sethalfscreen(false)
@@ -81,7 +81,7 @@ export default function Chat () {
         <Box sx={{ paddingBottom: "5vh",width: halfscreen ? "30vw" : "60vw", height: "100%", flexDirection:"row" , display:"flex" , justifyContent:'center',
          alignItems:"flex-end"}}>
             <Listings />
-            {halfscreen ? null : <Messages />}
+            {halfscreen ? null : <Messages textfieldtext={textfieldtext} settextfieldtext={settextfieldtext}/>}
         </Box>
 
     )
