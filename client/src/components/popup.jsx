@@ -14,7 +14,6 @@ import axios from 'axios';
 export default function FormDialog(props) {
   const [open, setOpen] = useState(false);
   const [imageURL, setImageURL] = useState();
-  const [hashhex, setHashhex] = useState('');
   const [body, setBody] = useState('');
   const publicKey = props.publicKey;
 
@@ -37,17 +36,19 @@ export default function FormDialog(props) {
         "Body": body,
         "VideoURLs": [],
         "ImageURLs": [imageURL]
-    }};
+    },
+};
     const response = await deso.posts.submitPost(request);
     const data = JSON.stringify(response["constructedTransactionResponse"]["PostHashHex"]);
-    setHashhex(data)
+    return data
 };
 
-async function getPost () {
+async function getPost (postHashhex) {
     const deso = new Deso();
     const request = {
-    "PostHashHex": {hashhex}
+    "PostHashHex": postHashhex
     };
+    console.log(request['PostHashHex'])
     const response = await deso.posts.getSinglePost(request);
     console.log(JSON.stringify(response));
     return response
@@ -60,10 +61,10 @@ async function getPost () {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const handleSubmit = () => {
-    const hashhex = createPost()
-    const data = getPost();
+    
+  async function handleSubmit() {
+    const hashhex = await createPost();
+    const data = await getPost(hashhex);
     console.log(JSON.stringify(data))
     axios
         .post('/input', data)

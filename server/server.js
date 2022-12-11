@@ -23,7 +23,6 @@ app.get('/api', (request, response) => {
 app.post('/input', async (request, response) => {
     const data = JSON.stringify(request.body.data)
     hashhexes.push(data);
-    console.log(hashhexes)
 });
 
 app.listen(port, ()=> {
